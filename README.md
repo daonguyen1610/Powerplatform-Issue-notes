@@ -24,3 +24,116 @@ Power Automate is built upon the Azure Logic Apps platform. Power Automate is ta
 - SharePoint Online List Forms
   - Cascading Drop Downs: Using Managed Metadata fields as a replacement for cascading drop down fields
   - Customization: Using JSON and formulas to configure custom headers, footers, field grouping, and conditional visibility
+  -
+# Load more than 10k items 
+Clear(gloAllItems);
+With(
+    {
+        wSets: With(
+            {
+                wLimits: With(
+                    {
+                        wLimit: Sort(Filter(ContractMasterData, Ticket_Contract = "Ticket", Status = "Review by Legal", LegalEmail = User().Email),SubID,Descending)
+                    },
+                    RoundDown((First(wLimit).SubID) / 2000,0) + 1
+                )
+            },
+            Set(test, wLimits);
+            AddColumns(
+                RenameColumns(
+                    Sequence(
+                        wLimits,
+                        0,
+                        2000
+                    ),
+                    "Value",
+                    "LowID"
+                ),
+                "HighID",
+                LowID + 2000
+            )
+        )
+    },
+    Set(test1,wSets);
+    ForAll(
+        wSets As MaxMin,
+        Collect(
+            gloAllItems,
+            Filter(
+                ContractMasterData,
+                SubID > MaxMin.LowID && SubID <= MaxMin.HighID,
+                Ticket_Contract = "Ticket",
+                Status = "Review by Legal",
+                LegalEmail = User().Email
+            )
+        )
+    )
+);
+ClearCollect(gloGalleryItems, gloAllItems)
+# Define global variable for display & hide variable
+Clear(gloAllItems);
+With(
+    {
+        wSets: With(
+            {
+                wLimits: With(
+                    {
+                        wLimit: Sort(
+                            Contacts,
+                            SubID,
+                            Descending
+                        )
+                    },
+                    RoundDown(
+                            (First(wLimit).SubID) / 2000,
+                            0
+                    ) + 1
+                )
+            },
+            Set(test, wLimits);
+            AddColumns(
+                RenameColumns(
+                    Sequence(
+                        wLimits,
+                        0,
+                        2000
+                    ),
+                    "Value",
+                    "LowID"
+                ),
+                "HighID",
+                LowID + 2000
+            )
+        )
+    },
+    Set(test1,wSets);
+    ForAll(
+        wSets As MaxMin,
+        Collect(
+            gloAllItems,
+            Filter(
+                Contacts,
+                SubID > MaxMin.LowID && SubID <= MaxMin.HighID
+            )
+        )
+    )
+);
+ClearCollect(gloDisplayAllItems, gloAllItems);
+# Check blank for combobox
+Filter(
+    ContactsResend, 
+    StartsWith(Name, TextInput5_6.Text) || StartsWith(Code, TextInput5_6.Text) || StartsWith(CustomerName, TextInput5_6.Text),
+    ComboBox3_7.Selected.Result = Status || IsBlank(ComboBox3_7.Selected.Result)
+)
+
+thay vì 
+If(
+IsBlank(ComboBox3_7.Selected.Result),
+ContactsResend,
+Filter(
+    ContactsResend, 
+    StartsWith(Name, TextInput5_6.Text) || StartsWith(Code, TextInput5_6.Text) || StartsWith(CustomerName, TextInput5_6.Text),
+    ComboBox3_7.Selected.Result = Status || IsBlank(ComboBox3_7.Selected.Result)
+)
+)
+
