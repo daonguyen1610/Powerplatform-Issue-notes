@@ -26,6 +26,7 @@ Power Automate is built upon the Azure Logic Apps platform. Power Automate is ta
   - Customization: Using JSON and formulas to configure custom headers, footers, field grouping, and conditional visibility
   -
 # Load more than 10k items 
+
 Clear(gloAllItems);
 With(
     {
