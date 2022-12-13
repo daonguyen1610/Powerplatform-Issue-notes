@@ -137,4 +137,13 @@ Filter(
     ComboBox3_7.Selected.Result = Status || IsBlank(ComboBox3_7.Selected.Result)
 )
 )
+#RELOAD PAGE 
+UpdateContext({gloRefresh:false});UpdateContext({gloRefresh:true}) ON onvisible 
 
+Filter(
+   ErrorCustomer,
+   ComboBox3_4.Selected.Value = Title || IsBlank(ComboBox3_4.Selected.Value),
+   StartsWith(CustomerName, TextInput5_3.Text) || StartsWith(Email, TextInput5_3.Text),
+   Created >= DatePicker1.SelectedDate && Created <= DatePicker1_1.SelectedDate,
+   **gloRefresh**
+)
