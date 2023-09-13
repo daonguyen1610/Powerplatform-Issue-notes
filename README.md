@@ -120,6 +120,14 @@ With(
     )
 );
 ClearCollect(gloDisplayAllItems, gloAllItems);
+# Load 10k items using created
+ClearCollect(test, TestOL2);
+UpdateContext({CountItems:  (First(SortByColumns(TestOL2, "ID", SortOrder.Descending)).ID - First(TestOL2).ID)/2000});
+ForAll(
+    Sequence(Round(CountItems, 0)),
+    Collect(test, Filter(TestOL2, Created >= Last(test).Created))
+);
+ClearCollect(test1, ForAll(Distinct(test, LookUp(test, ID = ThisRecord.ID)), Value));
 # Check blank for combobox
 Filter(
     ContactsResend, 
@@ -137,7 +145,7 @@ Filter(
     ComboBox3_7.Selected.Result = Status || IsBlank(ComboBox3_7.Selected.Result)
 )
 )
-#RELOAD PAGE 
+# RELOAD PAGE 
 UpdateContext({gloRefresh:false});UpdateContext({gloRefresh:true}) ON onvisible 
 
 Filter(
