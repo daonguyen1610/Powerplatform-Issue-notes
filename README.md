@@ -155,3 +155,25 @@ Filter(
    Created >= DatePicker1.SelectedDate && Created <= DatePicker1_1.SelectedDate,
    **gloRefresh**
 )
+# UPDATE MUTIL ROW
+Set(
+    varSeq,
+    RoundUp(
+        CountRows(
+            Filter(
+                'Activity Driver Mappings',
+                'Activity Driver ID'.'Activity Driver Name' = DataCardValue7.Text
+            )
+        ) / 2000,
+        0
+    )
+);
+ForAll(
+    Sequence(varSeq),
+    UpdateIf(
+        'Activity Driver Mappings',
+        'Activity Driver ID'.'Activity Driver Name' = DataCardValue7.Text,
+        {'Activity Driver ID': ComboBox1.Selected}
+    );
+    Refresh('Activity Driver Mappings');
+)
