@@ -177,3 +177,149 @@ ForAll(
     );
     Refresh('Activity Driver Mappings');
 )
+# GET USER FROM AD USER OR GROUP
+UpdateContext({locGetMemberID: MicrosoftEntraID.GetUser(cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.UserPrincipalName).id});
+If(
+    !IsBlank(cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.SelectedItems) And IsBlank(
+        LookUp(
+            colAppUserPermission,
+            mail = cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail
+        ).mail
+    ) And IsBlank(
+        LookUp(
+            colAddMember,
+            mail = cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail
+        ).mail
+    ),
+    IfError(
+        MicrosoftEntraID.AddUserToGroup(
+            gblSecurityGroup,
+            locGetMemberID
+        ),
+        Notify(
+            If(
+                !IsBlank(
+                    First(
+                        Filter(
+                            colDvLocalizations,
+                            Key = "Error Adding Notify Msg" And Language = gblLanguage
+                        )
+                    ).Translation
+                ),
+                First(
+                    Filter(
+                        colDvLocalizations,
+                        Key = "Error Adding Notify Msg" And Language = gblLanguage
+                    )
+                ).Translation,
+                First(
+                    Filter(
+                        colDvDefaultLocalizations,
+                        Key = "Error Adding Notify Msg"
+                    )
+                ).Translation
+            ) & " " & cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail & ". " & If(
+                !IsBlank(
+                    First(
+                        Filter(
+                            colDvLocalizations,
+                            Key = "Contact Site Super Admin Notify Msg" And Language = gblLanguage
+                        )
+                    ).Translation
+                ),
+                First(
+                    Filter(
+                        colDvLocalizations,
+                        Key = "Contact Site Super Admin Notify Msg" And Language = gblLanguage
+                    )
+                ).Translation,
+                First(
+                    Filter(
+                        colDvDefaultLocalizations,
+                        Key = "Contact Site Super Admin Notify Msg"
+                    )
+                ).Translation
+            ),
+            NotificationType.Error,
+            3000
+        ),
+        Notify(
+            cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail & " " & If(
+                !IsBlank(
+                    First(
+                        Filter(
+                            colDvLocalizations,
+                            Key = "Add Member Notify Msg" And Language = gblLanguage
+                        )
+                    ).Translation
+                ),
+                First(
+                    Filter(
+                        colDvLocalizations,
+                        Key = "Add Member Notify Msg" And Language = gblLanguage
+                    )
+                ).Translation,
+                First(
+                    Filter(
+                        colDvDefaultLocalizations,
+                        Key = "Add Member Notify Msg"
+                    )
+                ).Translation
+            ),
+            NotificationType.Success,
+            1000
+        );
+        Collect(
+            colAddMember,
+            {
+                mail: cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail,
+                displayName: cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.DisplayName,
+                userPrincipalName: cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.UserPrincipalName
+            }
+        )
+    ),
+    If(
+        !IsBlank(
+            LookUp(
+                colAppUserPermission,
+                mail = cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail
+            ).mail
+        ) Or !IsBlank(
+            LookUp(
+                colAddMember,
+                mail = cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail
+            ).mail
+        ),
+        Notify(
+            cmb_SiteSuperAdminSettings_PermissionsSearchNewMember.Selected.Mail & " " & If(
+                !IsBlank(
+                    First(
+                        Filter(
+                            colDvLocalizations,
+                            Key = "Member Exist Notify Msg" And Language = gblLanguage
+                        )
+                    ).Translation
+                ),
+                First(
+                    Filter(
+                        colDvLocalizations,
+                        Key = "Member Exist Notify Msg" And Language = gblLanguage
+                    )
+                ).Translation,
+                First(
+                    Filter(
+                        colDvDefaultLocalizations,
+                        Key = "Member Exist Notify Msg"
+                    )
+                ).Translation
+            ),
+            NotificationType.Warning,
+            2000
+        )
+    )
+);
+Reset(cmb_SiteSuperAdminSettings_PermissionsSearchNewMember);
+ClearCollect(
+    colADGroupMembers,
+    Office365Groups.ListGroupMembers(gblSecurityGroup).value
+);
