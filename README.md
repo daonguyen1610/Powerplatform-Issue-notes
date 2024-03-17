@@ -329,9 +329,6 @@ Concurrent(
     Set(glo_AccountsLastItemID, First(SortByColumns('2.1. Accounts', "ID", SortOrder.Descending)).ID),
     Clear(col_AccountMaxMin)
 );
-
-
-
 ForAll(
     If(
         glo_AccountsLastItemID = glo_AccountsFirstItemID, 
@@ -344,9 +341,6 @@ ForAll(
         Collect(col_AccountMaxMin,{Min: Last(col_AccountMaxMin).Max+1, Max: 2000+Last(col_AccountMaxMin).Max})
     )
 );
-
-
-
 Concurrent(
     IfError(ClearCollect(col_Account1, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,1).Min && SubID <= Index(col_AccountMaxMin,1).Max)), Blank()),
     IfError(ClearCollect(col_Account2, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,2).Min && SubID <= Index(col_AccountMaxMin,2).Max)), Blank()),
@@ -358,22 +352,16 @@ Concurrent(
     IfError(ClearCollect(col_Account8, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,8).Min && SubID <= Index(col_AccountMaxMin,8).Max)), Blank()),
     IfError(ClearCollect(col_Account9, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,9).Min && SubID <= Index(col_AccountMaxMin,9).Max)), Blank()),
     IfError(ClearCollect(col_Account10, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,10).Min && SubID <= Index(col_AccountMaxMin,10).Max)), Blank()),
-
-
-
     IfError(ClearCollect(col_Account11, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,11).Min && SubID <= Index(col_AccountMaxMin,11).Max)), Blank()),
     IfError(ClearCollect(col_Account12, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,12).Min && SubID <= Index(col_AccountMaxMin,12).Max)), Blank()),
     IfError(ClearCollect(col_Account13, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,13).Min && SubID <= Index(col_AccountMaxMin,13).Max)), Blank()),
     IfError(ClearCollect(col_Account14, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,14).Min && SubID <= Index(col_AccountMaxMin,14).Max)), Blank()),
-IfError(ClearCollect(col_Account15, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,15).Min && SubID <= Index(col_AccountMaxMin,15).Max)), Blank()),
+    IfError(ClearCollect(col_Account15, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,15).Min && SubID <= Index(col_AccountMaxMin,15).Max)), Blank()),
     IfError(ClearCollect(col_Account16, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,16).Min && SubID <= Index(col_AccountMaxMin,16).Max)), Blank()),
     IfError(ClearCollect(col_Account17, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,17).Min && SubID <= Index(col_AccountMaxMin,17).Max)), Blank()),
     IfError(ClearCollect(col_Account18, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,18).Min && SubID <= Index(col_AccountMaxMin,18).Max)), Blank()),
     IfError(ClearCollect(col_Account19, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,19).Min && SubID <= Index(col_AccountMaxMin,19).Max)), Blank()),
     IfError(ClearCollect(col_Account20, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,20).Min && SubID <= Index(col_AccountMaxMin,20).Max)), Blank()),
-
-
-
     IfError(ClearCollect(col_Account21, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,21).Min && SubID <= Index(col_AccountMaxMin,21).Max)), Blank()),
     IfError(ClearCollect(col_Account22, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,22).Min && SubID <= Index(col_AccountMaxMin,22).Max)), Blank()),
     IfError(ClearCollect(col_Account23, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,23).Min && SubID <= Index(col_AccountMaxMin,23).Max)), Blank()),
@@ -385,9 +373,6 @@ IfError(ClearCollect(col_Account15, Filter('2.1. Accounts', SubID >= Index(col_A
     IfError(ClearCollect(col_Account29, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,29).Min && SubID <= Index(col_AccountMaxMin,29).Max)), Blank()),
     IfError(ClearCollect(col_Account30, Filter('2.1. Accounts', SubID >= Index(col_AccountMaxMin,30).Min && SubID <= Index(col_AccountMaxMin,30).Max)), Blank())
 );
-
-
-
 ClearCollect(
     col_AccountsAllItem, 
     col_Account1, col_Account2, col_Account3, col_Account4, col_Account5, col_Account6, col_Account7, col_Account8, col_Account9, col_Account10,
